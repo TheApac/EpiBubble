@@ -2,12 +2,12 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
 /Library
 UnityTempFile*
 /obj/Debug
 /Packages
-/ProjectSettings
-/Temp
-/Assembly-CSharp.csproj
-/EpiBubble.sln
+ProjectSettings
+Temp
+Assembly-CSharp.csproj*
+EpiBubble.sln*
+/.vs
