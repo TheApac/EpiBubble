@@ -20,12 +20,14 @@ public class shooter : MonoBehaviour
     private Vector2 movement;
 
     private bool shot = false;
-    private bool collided = false;
+
+    private GameObject g;
+
+    private float width;
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
+        if (Input.GetMouseButtonDown(0)) {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = 0;
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
@@ -40,29 +42,46 @@ public class shooter : MonoBehaviour
                 movement = direction * speed;
                 shot = true;
             }
-
-            
         }
-           
     }
 
-    void OnCollisionEnter2D (Collision2D col)
+    void OnCollisionEnter2D(Collision2D col)
     {
-        if(col.gameObject.transform.parent.gameObject.name == "contourLeft" || col.gameObject.transform.parent.gameObject.name == "contourRight")
-        {
+        
+        if (g != null && g != col.gameObject) {
+            movement = new Vector2(0, 0);
+        } else if (col.gameObject.transform.parent.gameObject.name == "contourLeft" || col.gameObject.transform.parent.gameObject.name == "contourRight") {
             direction = new Vector2(-direction.x, direction.y);
             movement = direction * speed;
-        } else if (collided) {
-            movement = new Vector2(0, 0);
         } else {
-            movement = direction / 3;
-            collided =true;
+            RectTransform rt = (RectTransform)transform;
+            width = rt.rect.width;
+            if (col.gameObject.transform.position.y > transform.position.y) {
+                movement = direction / 3;
+                if (col.gameObject.transform.position.x > transform.position.x) {
+                    if (col.gameObject.transform.position.x - transform.position.x < width / 2) {
+                        direction = new Vector2(-1, 1);
+                        movement = direction / 2;
+                    }
+                } else if (transform.position.x - col.gameObject.transform.position.x < width / 2) {
+                    direction = new Vector2(1, 1);
+                    movement = direction / 2;
+                }
+                g = col.gameObject;
+            }
         }
     }
 
     void FixedUpdate()
     {
         // Application du mouvement
+        if (g != null) {
+            if (g.transform.position.x > transform.position.x && g.transform.position.x - transform.position.x > width / 2) {
+                movement = new Vector2(0, 0);
+            } else if (transform.position.x - g.transform.position.x > width / 2) {
+                movement = new Vector2(0, 0);
+            }
+        }
         GetComponent<Rigidbody2D>().velocity = movement;
     }
 }
