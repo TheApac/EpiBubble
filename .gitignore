@@ -5,3 +5,9 @@
 /.vs
 /Library
 UnityTempFile*
+/obj/Debug
+/Packages
+/ProjectSettings
+/Temp
+/Assembly-CSharp.csproj
+/EpiBubble.sln
