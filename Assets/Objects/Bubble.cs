@@ -3,12 +3,11 @@ using System.Collections;
 
 public class Bubble : MonoBehaviour
 {
-    Sprite[] colors;
 
     // Use this for initialization
     void Start()
     {
-        colors = Resources.LoadAll<Sprite>("./Textures");
+        Debug.Log("EZ");
     }
 
     // Update is called once per frame

@@ -4,24 +4,25 @@ using System.Collections.Generic;
 
 public class Line : MonoBehaviour
 {
-    List<Bubble> bubbles = new List<Bubble>();
-    int size = 15;
-    float width;
-    float height;
+    public GameObject[] bubbles;
+    public int nbBubbles = 17;
 
     // Use this for initialization
     void Start()
     {
-        float x = 0;
-        float y = 0;
-        float z = 0;
 
-        for (int i = 0; i < size; i++)
+        float x = 0f;
+        float y = 0f;
+        float z = 0f;
+
+        for (int i = 0; i < nbBubbles; i++)
         {
-            x -= 063;
-            Bubble bubble = new Bubble();
-            bubble.transform.position = new Vector3(x, y, z);
-            bubbles.Add(bubble);
+            Vector3 position = new Vector3(x, y, z);
+            GameObject bubble = Instantiate(bubbles[Random.Range(0, 5)], gameObject.transform);
+            //bubble.transform.position = position;
+            //bubble.transform.parent = gameObject.transform;
+            
+            x -= 0.63f;
         }
     }
 
