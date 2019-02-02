@@ -50,9 +50,18 @@ public class shooter : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            shot = true;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (GameObject.Find("SettingButton").GetComponent<SettingAction>().onSpriteHover == true)
+                {
+                    GameObject.Find("SettingButton").GetComponent<SettingAction>().showSetting();
+                    return;
+                }
+            if (GameObject.Find("MainMenu").GetComponent<Camera>().enabled != true && GameObject.Find("MainDiifficult").GetComponent<Camera>().enabled != true && GameObject.Find("MainSetting").GetComponent<Camera>().enabled != true)
+            {
+                shot = true;
+            }
         }
     }
 

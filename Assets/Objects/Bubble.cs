@@ -39,22 +39,30 @@ public class Bubble : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 0;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
-            // convert mouse position into world coordinates
-            Vector2 mouseScreenPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // Allow shoot only if the player doesn't shoot downwards
-            if (mouseScreenPosition.y > transform.position.y && !shot)
+            if (Input.GetMouseButtonDown(0))
             {
-                // get direction you want to point at
-                direction = (mouseScreenPosition - (Vector2)transform.position).normalized;
-                // Update movement vector
-                movement = direction * speed;
-                shot = true;
+                if (GameObject.Find("SettingButton").GetComponent<SettingAction>().onSpriteHover == true) {
+                    GameObject.Find("SettingButton").GetComponent<SettingAction>().showSetting();
+                    return;
+                }
+            if (GameObject.Find("MainMenu").GetComponent<Camera>().enabled != true && GameObject.Find("MainDiifficult").GetComponent<Camera>().enabled != true && GameObject.Find("MainSetting").GetComponent<Camera>().enabled != true)
+            {
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = 0;
+                mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+
+                // convert mouse position into world coordinates
+                Vector2 mouseScreenPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                // Allow shoot only if the player doesn't shoot downwards
+                if (mouseScreenPosition.y > transform.position.y && !shot)
+                {
+                    // get direction you want to point at
+                    direction = (mouseScreenPosition - (Vector2)transform.position).normalized;
+                    // Update movement vector
+                    movement = direction * speed;
+                    shot = true;
+                }
             }
         }
     }
