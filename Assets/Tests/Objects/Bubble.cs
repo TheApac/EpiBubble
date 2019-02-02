@@ -9,7 +9,7 @@ public class Bubble : MonoBehaviour
     /// <summary>
     /// Vitesse de déplacement
     /// </summary>
-    private Vector2 speed = new Vector2(5, 5);
+    private Vector2 speed = new Vector2(10, 10);
 
     /// <summary>
     /// Direction

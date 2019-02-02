@@ -11,3 +11,4 @@ Temp
 Assembly-CSharp.csproj*
 EpiBubble.sln*
 /.vs
+/obj/Release

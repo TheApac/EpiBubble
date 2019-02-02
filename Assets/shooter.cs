@@ -10,12 +10,12 @@ public class shooter : MonoBehaviour
     /// <summary>
     /// Vitesse de déplacement
     /// </summary>
-    public Vector2 speed = new Vector2(1, 1);
+    private Vector2 speed = new Vector2(10, 10);
 
     /// <summary>
     /// Direction
     /// </summary>
-    public Vector2 direction;
+    private Vector2 direction;
 
     private Vector2 movement;
 
@@ -23,65 +23,62 @@ public class shooter : MonoBehaviour
 
     private GameObject g;
 
+    private GameObject party;
+
+    private GameObject mainBubble;
+
+    private GameObject nextBubble;
+
+    private List<GameObject> shots;
+
     private float width;
+
+    private void Start()
+    {
+        shots = new List<GameObject>();
+        party = gameObject.transform.parent.gameObject;
+        mainBubble = Instantiate(party.GetComponent<Party>().bubbles[Random.Range(0, 5)], new Vector3(0, 0, 0), Quaternion.identity);
+        mainBubble.transform.SetParent(gameObject.transform, false);
+        mainBubble.AddComponent<Rigidbody2D>().gravityScale = 0;
+        mainBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        mainBubble.AddComponent<Bubble>();
+        mainBubble.AddComponent<RectTransform>();
+        nextBubble = Instantiate(party.GetComponent<Party>().bubbles[Random.Range(0, 5)], new Vector3(7, 0, 0), Quaternion.identity);
+        nextBubble.transform.SetParent(gameObject.transform, false);
+
+    }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 0;
-            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-
-            // convert mouse position into world coordinates
-            Vector2 mouseScreenPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // Allow shoot only if the player doesn't shoot downwards
-            if (mouseScreenPosition.y > transform.position.y && !shot) {
-                // get direction you want to point at
-                direction = (mouseScreenPosition - (Vector2)transform.position).normalized;
-                // Update movement vector
-                movement = direction * speed;
-                shot = true;
-            }
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        
-        if (g != null && g != col.gameObject) {
-            movement = new Vector2(0, 0);
-        } else if (col.gameObject.transform.parent.gameObject.name == "contourLeft" || col.gameObject.transform.parent.gameObject.name == "contourRight") {
-            direction = new Vector2(-direction.x, direction.y);
-            movement = direction * speed;
-        } else {
-            RectTransform rt = (RectTransform)transform;
-            width = rt.rect.width;
-            if (col.gameObject.transform.position.y > transform.position.y) {
-                movement = direction / 3;
-                if (col.gameObject.transform.position.x > transform.position.x) {
-                    if (col.gameObject.transform.position.x - transform.position.x < width / 2) {
-                        direction = new Vector2(-1, 1);
-                        movement = direction / 2;
-                    }
-                } else if (transform.position.x - col.gameObject.transform.position.x < width / 2) {
-                    direction = new Vector2(1, 1);
-                    movement = direction / 2;
-                }
-                g = col.gameObject;
-            }
+        if (Input.GetMouseButtonDown(0))
+        {
+            shot = true;
         }
     }
 
     void FixedUpdate()
     {
-        // Application du mouvement
-        if (g != null) {
-            if (g.transform.position.x > transform.position.x && g.transform.position.x - transform.position.x > width / 2) {
-                movement = new Vector2(0, 0);
-            } else if (transform.position.x - g.transform.position.x > width / 2) {
-                movement = new Vector2(0, 0);
+        if (mainBubble.GetComponent<Bubble>() != null)
+        {
+            if (mainBubble.GetComponent<Bubble>().movement == new Vector2(0, 0) && shot)
+            {
+                //GameObject.Destroy(mainBubble.GetComponent<Rigidbody2D>());
+                GameObject.Destroy(mainBubble.GetComponent<Bubble>());
+                mainBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+                mainBubble = Instantiate(nextBubble, new Vector3(0, 0, 0), Quaternion.identity);
+                //mainBubble.transform.SetParent(gameObject.transform, false);
+                //mainBubble = nextBubble;
+                mainBubble.AddComponent<Rigidbody2D>().gravityScale = 0;
+                mainBubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+                mainBubble.AddComponent<Bubble>();
+                mainBubble.AddComponent<RectTransform>();
+                mainBubble.transform.position = new Vector3(0, 0, 0);
+                mainBubble.transform.SetParent(gameObject.transform, false);
+                GameObject.Destroy(nextBubble);
+                nextBubble = Instantiate(party.GetComponent<Party>().bubbles[Random.Range(0, 5)], new Vector3(7, 0, 0), Quaternion.identity);
+                nextBubble.transform.SetParent(gameObject.transform, false);
+                shot = false;
             }
         }
-        GetComponent<Rigidbody2D>().velocity = movement;
     }
 }
